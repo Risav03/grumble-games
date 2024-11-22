@@ -5,6 +5,8 @@ import { Button } from '@/components/UI/button';
 import { TextInput } from '@/components/UI/textInput';
 import { Card} from '@/components/UI/card';
 import { AlertCircle, Lightbulb } from 'lucide-react';
+import useSolanaNFTFetch from "@/lib/hooks/useSolanaNFTFetch"
+import { useGlobalContext } from '@/context/MainContextProvider';
 
 const WordGuesserGame = () => {
   const [targetWord, setTargetWord] = useState<string>('');
@@ -15,6 +17,8 @@ const WordGuesserGame = () => {
   const [feedback, setFeedback] = useState<string>('');
   const [gameStatus, setGameStatus] = useState<string>('playing');
   const [revealedLetters, setRevealedLetters] = useState<number[]>([]);
+
+    const{publicKey} = useGlobalContext()
 
   // Word generation function (simple dictionary)
   const generateWord = (length:number) => {
@@ -40,6 +44,13 @@ const WordGuesserGame = () => {
     setGameStatus('playing');
     setRevealedLetters([]);
   };
+
+  const {NFTs} = useSolanaNFTFetch();
+
+  useEffect(()=>{
+    if(publicKey)
+    console.log(NFTs);
+  },[publicKey])
 
   // Start game on component mount
   useEffect(() => {
@@ -92,15 +103,15 @@ const WordGuesserGame = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <Card className="w-full max-w-md">
+    <div className="">
+      <Card className="w-[20rem] max-w-md">
 
-          <h2 className="text-center">Word Guesser</h2>
+          <h2 className="text-center text-white mb-5">Word Guesser</h2>
 
         <div>
           <div className="space-y-4">
             {/* Word Length Selector */}
-            <div className="flex justify-center space-x-2 mb-4">
+            {/* <div className="flex justify-center space-x-2 mb-4">
               {[4, 5, 6, 7].map(length => (
                 <Button 
                   key={length} 
@@ -111,7 +122,7 @@ const WordGuesserGame = () => {
                   {length} Letters
                 </Button>
               ))}
-            </div>
+            </div> */}
 
             {/* Word Progress */}
             <div className="text-center text-2xl font-bold tracking-widest mb-4">
@@ -152,8 +163,8 @@ const WordGuesserGame = () => {
                 flex items-center p-3 rounded-lg
                 ${gameStatus === 'won' ? 'bg-green-100' : 'bg-red-100'}
               `}>
-                <AlertCircle className="mr-2" />
-                <span>{feedback}</span>
+                <AlertCircle className={` ${gameStatus === 'won' ? 'text-green-500' : 'text-red-500'}  mr-2 `} />
+                <span className={` ${gameStatus === 'won' ? 'text-green-500' : 'text-red-500'} `}>{feedback}</span>
               </div>
             )}
 

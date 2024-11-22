@@ -1,4 +1,5 @@
 import React from 'react'
+import WalletConnectButton from "@/components/UI/walletConnectButton"
 
 export const Background = () => {
   return (

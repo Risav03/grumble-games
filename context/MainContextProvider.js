@@ -22,25 +22,9 @@ export const GlobalContextProvider = ({ children }) => {
 
   const[fetch, setFetch] = useState(false);
 
-  async function checkExistingUser(){
-    try{
-      const wallet = publicKey.toString();
-      const res = await axios.get("/api/user/" + wallet);
-      if(res.data.user){
-        console.log("fetching user");
-        setUser(res.data.user);
-
-      }else{
-        setUser(null);
-      }
-    }
-    catch(err){
-    }
-  }
-
   useEffect(()=>{
     if(publicKey)
-      checkExistingUser();
+      console.log(publicKey.toString())
   },[publicKey, fetch])
 
   return (

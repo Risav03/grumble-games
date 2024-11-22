@@ -2,9 +2,9 @@
 
 import { ReactNode } from 'react';
 //Context
-import { GlobalContextProvider } from './MainContextProvider';
+import { GlobalContextProvider } from '../context/MainContextProvider';
 
-const Providers = ({ children }:{children:any}) => {
+const Providers = ({ children }:{children:ReactNode}) => {
 
   return (
       <GlobalContextProvider>

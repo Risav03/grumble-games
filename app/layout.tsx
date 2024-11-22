@@ -19,13 +19,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Providers>
       <body
         className={`${zen.className}`}
-      >
+        >
+        <Providers>
         {children}
-      </body>
         </Providers>
+      </body>
     </html>
   );
 }
