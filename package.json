@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@shyft-to/js": "^0.2.40",
+    "axios": "^1.7.7",
     "lucide-react": "^0.460.0",
+    "moment": "^2.30.1",
     "mongodb": "^6.10.0",
     "mongoose": "^8.8.2",
     "next": "15.0.3",

@@ -3,13 +3,15 @@ import mongoose, {Schema, model, models} from 'mongoose';
 type UserType = {
     walletId:string,
     username:string,
-    lastGuess:Date
+    nextGuess:Date,
+    points:number
 }
 
 const UserSchema = new Schema<UserType>({
-    walletId:{type:String, required:true},
+    walletId:{type:String, required:true, unique:true},
     username: {type:String, default:""},
-    lastGuess: {type:Date}
+    nextGuess: {type:Date},
+    points: {type:Number, default:0}
   }, {collection: "User"})
 
   const User = models.User || model('User', UserSchema);

@@ -22,10 +22,22 @@ export const GlobalContextProvider = ({ children }) => {
 
   const[fetch, setFetch] = useState(false);
 
+  async function getUser(){
+    try{
+      const res = await axios.post("/api/user/create",{wallet: publicKey?.toString()});
+      setUser(res.data.user);
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+
   useEffect(()=>{
-    if(publicKey)
-      console.log(publicKey.toString())
-  },[publicKey, fetch])
+    if(publicKey){
+      getUser();
+      console.log(publicKey.toString());
+    }
+  },[publicKey])
 
   return (
     <GlobalContext.Provider value={{ loader, setLoader, publicKey, setPublicKey, user, setUser, fetch, setFetch}}>

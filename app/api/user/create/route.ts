@@ -4,20 +4,22 @@ import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function POST(req:any){
+    revalidatePath('/','layout');
     try{
+        await connectToDB();
         const body = await req.json();
         const{wallet} = body;
-        revalidatePath('/','layout');
-        await connectToDB();
 
-        const existingUser = await User.findOne({walletId:wallet});
+        const existingUser = await User?.findOne({walletId:wallet});
 
         if(existingUser){
-            return NextResponse.json({exists:existingUser},{status:204});
+            return NextResponse.json({user:existingUser},{status:202});
         }
 
+        console.log("LMAOOO WTF")
+
         const user = await User?.create({
-            walletId:wallet, username:wallet, lastGuess:Date.now()
+            walletId:wallet, username:wallet, nextGuess:Date.now()
         })
 
         return NextResponse.json({user:user},{status:200});

@@ -66,7 +66,7 @@ const WalletConnectButton = () => {
       <>
         {provider?.isConnected ?
           <button className={` cursor-pointer bg-gradient-to-br absolute top-4 right-4 z-50 from-slate-900 to-black border-[1px] rounded-lg border-slate-800 px-8 py-3  h-12 text-white `} onClick={handleDisconnect}>
-            {publicKey?.toString().slice(0, 6) + "..." + publicKey?.toString().slice(-6)}
+            {publicKey?.toString().slice(0, 6) + "..." + publicKey?.toString().slice(-6)} | {user.points}
           </button> :
           <button className={` cursor-pointer bg-gradient-to-br absolute top-4 right-4 z-50 from-slate-900 to-black border-[1px] rounded-lg border-slate-800 px-8 py-3 h-12 text-white`} onClick={handleConnect}>
             Wallet Connect
