@@ -112,80 +112,82 @@ const WordGuesserGame = () => {
   return (
     <div className="">
       {!publicKey && <h2>Connect wallet to guess!</h2>}
-      {publicKey && show(user?.nextGuess) ? <>
-        <Card className="w-[20rem] max-w-md">
+      {publicKey && <>
+        {show(user?.nextGuess) ? <>
+          <Card className="w-[20rem] max-w-md">
 
-          <h2 className="text-center text-white mb-5">Word Guesser</h2>
+            <h2 className="text-center text-white mb-5">Word Guesser</h2>
 
-          <div>
-            <div className="space-y-4">
+            <div>
+              <div className="space-y-4">
 
-              {/* Word Progress */}
-              <div className="text-center text-2xl font-bold tracking-widest mb-4">
-                {renderWordProgress()}
-              </div>
-
-              {/* Guess Input */}
-              <TextInput
-                heading='Guess'
-                required={true}
-                placeholder="Enter your guess"
-                content={guess}
-                setContent={setGuess}
-                disabled={gameStatus !== 'playing'}
-              />
-
-              {/* Game Controls */}
-              <div className="flex justify-between gap-4">
-                <Button
-                  type='primary'
-                  onClick={handleGuess}
-                  disabled={gameStatus !== 'playing'}
-                >
-                  Guess
-                </Button>
-                <Button
-                  type='secondary'
-                  onClick={useHint}
-                  disabled={hints <= 0 || gameStatus !== 'playing'}
-                >
-                  <Lightbulb className="mr-2" /> Hint ({hints})
-                </Button>
-              </div>
-
-              {/* Feedback & Status */}
-              {feedback && (
-                <div className={`
-      flex items-center p-3 rounded-lg
-      ${gameStatus === 'won' ? 'bg-green-100' : 'bg-red-100'}
-    `}>
-                  <AlertCircle className={` ${gameStatus === 'won' ? 'text-green-500' : 'text-red-500'}  mr-2 `} />
-                  <span className={` ${gameStatus === 'won' ? 'text-green-500' : 'text-red-500'} `}>{feedback}</span>
+                {/* Word Progress */}
+                <div className="text-center text-2xl font-bold tracking-widest mb-4">
+                  {renderWordProgress()}
                 </div>
-              )}
 
-              {/* Game Status */}
-              <div className="text-center">
-                <p>Trials Left: {trials}</p>
-                {/* @ts-ignore */}
-                <p>(including {Math.floor(NFTs?.length / 10)} bonus trials)</p>
+                {/* Guess Input */}
+                <TextInput
+                  heading='Guess'
+                  required={true}
+                  placeholder="Enter your guess"
+                  content={guess}
+                  setContent={setGuess}
+                  disabled={gameStatus !== 'playing'}
+                />
+
+                {/* Game Controls */}
+                <div className="flex justify-between gap-4">
+                  <Button
+                    type='primary'
+                    onClick={handleGuess}
+                    disabled={gameStatus !== 'playing'}
+                  >
+                    Guess
+                  </Button>
+                  <Button
+                    type='secondary'
+                    onClick={useHint}
+                    disabled={hints <= 0 || gameStatus !== 'playing'}
+                  >
+                    <Lightbulb className="mr-2" /> Hint ({hints})
+                  </Button>
+                </div>
+
+                {/* Feedback & Status */}
+                {feedback && (
+                  <div className={`
+        flex items-center p-3 rounded-lg
+        ${gameStatus === 'won' ? 'bg-green-100' : 'bg-red-100'}
+      `}>
+                    <AlertCircle className={` ${gameStatus === 'won' ? 'text-green-500' : 'text-red-500'}  mr-2 `} />
+                    <span className={` ${gameStatus === 'won' ? 'text-green-500' : 'text-red-500'} `}>{feedback}</span>
+                  </div>
+                )}
+
+                {/* Game Status */}
+                <div className="text-center">
+                  <p>Trials Left: {trials}</p>
+                  {/* @ts-ignore */}
+                  <p>(including {Math.floor(NFTs?.length / 10)} bonus trials)</p>
+                </div>
+
+                {/* Restart Game */}
+                {gameStatus !== 'playing' && (
+                  <Button
+                    onClick={initializeGame}
+                    type='text'
+                  >
+                    Start New Game
+                  </Button>
+                )}
               </div>
-
-              {/* Restart Game */}
-              {gameStatus !== 'playing' && (
-                <Button
-                  onClick={initializeGame}
-                  type='text'
-                >
-                  Start New Game
-                </Button>
-              )}
             </div>
-          </div>
-        </Card>
-      </> : <>
-      {/* @ts-ignore */}
-      Next Guess: {moment(user.nextGuess).calendar()}
+          </Card>
+        </> : <>
+        {/* @ts-ignore */}
+        Next Guess: {moment(user.nextGuess).calendar()}
+        </>}
       </>}
 
     </div>
