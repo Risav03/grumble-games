@@ -29,16 +29,16 @@ const WordGuesserGame = () => {
     }
   }, [NFTs])
 
-  // Word generation function (simple dictionary)
+
   const generateWord = async () => {
     const res = await fetch('https://random-word-api.herokuapp.com/word');
     const [word] = await res.json();
-    console.log(word);
     return word;
   };
 
   const initializeGame = async () => {
     const newWord = await generateWord();
+    console.log(newWord);
     setTargetWord(newWord);
     setGuess('');
     setTrials(3);
@@ -50,19 +50,19 @@ const WordGuesserGame = () => {
 
   useEffect(() => {
     // @ts-ignore
-    if (NFTs?.length > 0)
+    if (NFTs)
       initializeGame();
   }, [NFTs]);
-
 
 
   const handleGuess = () => {
     if (guess.toLowerCase() === targetWord.toLowerCase()) {
       setFeedback('Congratulations! You guessed the word!');
-      axios.patch("/api/user/update/" + publicKey.toString(), {points: (0.5*trials)*100*(0.25*targetWord.length)});
+      axios.patch("/api/user/update/" + publicKey.toString(), {points: Math.round((0.5*trials)*100*(0.25*targetWord.length))});
       setGameStatus('won');
       
-      window.location.reload()
+      window.location.reload();
+      return;
     }
 
     setTrials(prev => prev - 1);
@@ -71,7 +71,8 @@ const WordGuesserGame = () => {
       setFeedback(`Game over! The word was ${targetWord}.`);
       axios.patch("/api/user/update/" + publicKey.toString(), {points: 0});
       setGameStatus('lost');
-      window.location.reload()
+      window.location.reload();
+      return;
     }
 
     setFeedback('Incorrect guess. Try again!');
