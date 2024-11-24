@@ -1,4 +1,5 @@
 import { connectToDB } from "@/lib/db/db";
+import First from "@/schemas/firstGuess";
 import User from "@/schemas/userSchema";
 import { NextResponse } from "next/server";
 
@@ -17,13 +18,31 @@ export async function PATCH(req:any){
             return NextResponse.json({error:"User not found"},{status:404})
         }
 
-        console.log("BEFORE DAYE");
+        const date = new Date();
+        const day = date.getDay();
+
+        let bonus = 0;
+
+        const existingFirst = await First.findOne({time:day});
+
+        if(!existingFirst){
+            await First.create({
+                walletId: wallet,
+                time:day
+            });
+
+            bonus = 200;
+        }
+
+        const existingPrevFirst = await First.findOne({time:day-1});
+
+        if(existingPrevFirst){
+            await First.findOneAndDelete({time:day-1});
+        }
+
+
         user.nextGuess = Date.now()+86400000;
-        console.log("After DATE");
-
-        user.points += points;
-
-        console.log("After points", user.points);
+        user.points += points + bonus;
 
         await user.save();
 

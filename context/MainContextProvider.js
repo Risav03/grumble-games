@@ -35,7 +35,6 @@ export const GlobalContextProvider = ({ children }) => {
   useEffect(()=>{
     if(publicKey){
       getUser();
-      console.log(publicKey.toString());
     }
   },[publicKey])
 

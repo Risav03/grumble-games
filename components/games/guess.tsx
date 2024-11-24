@@ -38,14 +38,29 @@ const WordGuesserGame = () => {
 
   const initializeGame = async () => {
     const newWord = await generateWord();
-    console.log(newWord);
     setTargetWord(newWord);
+
+    let i = Math.floor(newWord.length/3);
+    let j = 0;
+    
+    while(i>0){
+
+      const unrevealedIndexes = newWord
+      .split('')
+      .map((_:any, index:any) => index)
+      .filter((index:any) => !revealedLetters.includes(index));
+      
+      const randomIndex = unrevealedIndexes[Math.floor(j)];
+      setRevealedLetters(prev => [...prev, randomIndex]);
+      j=j+4;
+      i--;
+    }
+
     setGuess('');
     setTrials(3);
-    setHints(Math.floor(newWord.length / 2));
+    setHints(Math.floor(newWord.length / 3));
     setFeedback('');
     setGameStatus('playing');
-    setRevealedLetters([]);
   };
 
   useEffect(() => {
@@ -60,8 +75,8 @@ const WordGuesserGame = () => {
       setFeedback('Congratulations! You guessed the word!');
       axios.patch("/api/user/update/" + publicKey.toString(), {points: Math.round((0.5*trials)*100*(0.25*targetWord.length))});
       setGameStatus('won');
+      setTimeout(()=>{window.location.reload();},1000)
       
-      window.location.reload();
       return;
     }
 
@@ -71,7 +86,8 @@ const WordGuesserGame = () => {
       setFeedback(`Game over! The word was ${targetWord}.`);
       axios.patch("/api/user/update/" + publicKey.toString(), {points: 0});
       setGameStatus('lost');
-      window.location.reload();
+      setTimeout(()=>{window.location.reload();},1000)
+
       return;
     }
 
@@ -80,7 +96,7 @@ const WordGuesserGame = () => {
 
   // Hint mechanism
   const useHint = () => {
-    if (hints <= 0 || gameStatus !== 'playing') return;
+    if (hints <= 0) return;
 
     const unrevealedIndexes = targetWord
       .split('')
