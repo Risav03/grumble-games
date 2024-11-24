@@ -31,8 +31,8 @@ const WordGuesserGame = () => {
 
 
   const generateWord = async () => {
-    const res = await fetch('https://random-word-api.herokuapp.com/word');
-    const [word] = await res.json();
+    const res = await axios.get("/api/getWord");
+    const word = res.data.word;
     return word;
   };
 
