@@ -19,7 +19,7 @@ export async function PATCH(req:any){
         }
 
         const date = new Date();
-        const day = date.getDay();
+        const day = date.getDate();
 
         let bonus = 0;
 

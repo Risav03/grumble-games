@@ -20,7 +20,14 @@ const WordGuesserGame = () => {
   const [revealedLetters, setRevealedLetters] = useState<number[]>([]);
   const { NFTs } = useSolanaNFTFetch();
 
-  const { publicKey, user } = useGlobalContext()
+  const[day, getDay] = useState<number>(0);
+
+  const { publicKey, user, leaderboard } = useGlobalContext();
+
+  useEffect(()=>{
+    const date = new Date();
+    getDay(date.getDate());
+  },[])
 
   useEffect(() => {
     if (NFTs) {
@@ -202,9 +209,13 @@ const WordGuesserGame = () => {
           </Card>
         </> : <>
         {/* @ts-ignore */}
-        Next Guess: {moment(user.nextGuess).calendar()}
+        <p className='text-center'>Next Guess: {moment(user.nextGuess).calendar()}</p>
         </>}
       </>}
+
+      {leaderboard.time == day && <div className='text-white flex items-center justify-center flex-col mt-5'>
+        Today's first guess by <span className='bg-gradient-to-b from-yellow-400 via-yellow-200 to-yellow-700 bg-clip-text text-transparent'>{leaderboard.walletId}</span>
+      </div>}
 
     </div>
   );

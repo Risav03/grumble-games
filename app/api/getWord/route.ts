@@ -36,7 +36,7 @@ export async function GET(req:any){
           ];
 
           const date = new Date();
-          const today = date.getDay();
+          const today = date.getDate();
 
           return NextResponse.json({word:randomWords[today]},{status:200})
     }
