@@ -24,7 +24,9 @@ export async function PATCH(req:any){
         let bonus = 0;
 
         const existingFirst = await First.findOne({time:day});
-
+        if(existingFirst){
+            return NextResponse.json({message:"First guess done"},{status:202});
+        }
         if(!existingFirst){
             await First.create({
                 walletId: wallet,
