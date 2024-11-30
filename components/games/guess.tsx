@@ -21,13 +21,14 @@ const WordGuesserGame = () => {
   const [revealedLetters, setRevealedLetters] = useState<number[]>([]);
   const { NFTs } = useSolanaNFTFetch();
 
-  const[day, getDay] = useState<number>(0);
+  const[day, setDay] = useState<number>(0);
 
   const { publicKey, user, leaderboard } = useGlobalContext();
 
   useEffect(()=>{
     const date = new Date();
-    getDay(date.getDate());
+    console.log(date.getDate(), leaderboard.time)
+    setDay(date.getDate());
   },[])
 
   useEffect(() => {

@@ -34,10 +34,10 @@ export async function PATCH(req:any){
             bonus = 200;
         }
 
-        const existingPrevFirst = await First.findOne({time:day-1});
+        const existingPrevFirst = await First.findOne({time:{ $ne: day }});
 
         if(existingPrevFirst){
-            await First.findOneAndDelete({time:day-1});
+            await First.findOneAndDelete({time:{ $ne: day }});
         }
 
 
