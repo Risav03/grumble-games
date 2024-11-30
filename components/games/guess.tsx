@@ -12,6 +12,7 @@ import moment from 'moment';
 
 const WordGuesserGame = () => {
   const [targetWord, setTargetWord] = useState<string>('');
+  const[hint, setHint] = useState<string>('');
   const [guess, setGuess] = useState<string>('');
   const [trials, setTrials] = useState<number>(3);
   const [hints, setHints] = useState<number>(0);
@@ -40,12 +41,14 @@ const WordGuesserGame = () => {
   const generateWord = async () => {
     const res = await axios.get("/api/getWord");
     const word = res.data.word;
+    setHint(res.data.hint);
     return word;
   };
 
   const initializeGame = async () => {
     const newWord = await generateWord();
     setTargetWord(newWord);
+    
 
     let i = Math.floor(newWord.length/3);
     let j = 0;
@@ -141,6 +144,7 @@ const WordGuesserGame = () => {
 
             <h2 className="text-center text-white mb-5">Word Guesser</h2>
 
+
             <div>
               <div className="space-y-4">
 
@@ -148,6 +152,7 @@ const WordGuesserGame = () => {
                 <div className="text-center text-2xl font-bold tracking-widest mb-4">
                   {renderWordProgress()}
                 </div>
+            <p className='text-sm text-center my-4 text-slate-500'>{hint}</p>
 
                 {/* Guess Input */}
                 <TextInput
