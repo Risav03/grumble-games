@@ -27,6 +27,13 @@ export async function PATCH(req:any){
         if(existingFirst){
             return NextResponse.json({message:"First guess done"},{status:202});
         }
+
+        const existingPrevFirst = await First.findOne({time:{ $ne: day }});
+
+        if(existingPrevFirst){
+            await First.findOneAndDelete({time:{ $ne: day }});
+        }
+
         if(!existingFirst){
             await First.create({
                 walletId: wallet,
@@ -34,12 +41,6 @@ export async function PATCH(req:any){
             });
 
             bonus = 200;
-        }
-
-        const existingPrevFirst = await First.findOne({time:{ $ne: day }});
-
-        if(existingPrevFirst){
-            await First.findOneAndDelete({time:{ $ne: day }});
         }
 
 

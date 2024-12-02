@@ -7,7 +7,7 @@ type FirstType = {
 }
 
 const FirstSchema = new Schema<FirstType>({
-    walletId:{type:String, required:true, unique:true},
+    walletId:{type:String, required:true},
     username: {type:String, default:""},
     time: {type:Number},
   }, {collection: "First"})

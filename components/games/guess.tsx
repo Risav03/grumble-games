@@ -9,6 +9,8 @@ import useSolanaNFTFetch from "@/lib/hooks/useSolanaNFTFetch"
 import { useGlobalContext } from '@/context/MainContextProvider';
 import axios from 'axios';
 import moment from 'moment';
+import goblin from "@/assets/goblin.png"
+import Image from 'next/image';
 
 const WordGuesserGame = () => {
   const [targetWord, setTargetWord] = useState<string>('');
@@ -81,11 +83,13 @@ const WordGuesserGame = () => {
   }, [NFTs]);
 
 
-  const handleGuess = () => {
+  const handleGuess = async () => {
     if (guess.toLowerCase() === targetWord.toLowerCase()) {
       setFeedback('Congratulations! You guessed the word!');
-      axios.patch("/api/user/update/" + publicKey.toString(), {points: Math.round((0.5*trials)*100*(0.25*targetWord.length))});
+      const res = await axios.patch("/api/user/update/" + publicKey.toString(), {points: Math.round((0.5*trials)*100*(0.25*targetWord.length))});
       setGameStatus('won');
+
+      if(res.status == 200)
       setTimeout(()=>{window.location.reload();},1000)
       
       return;
@@ -95,8 +99,10 @@ const WordGuesserGame = () => {
 
     if (trials <= 1) {
       setFeedback(`Game over! The word was ${targetWord}.`);
-      axios.patch("/api/user/update/" + publicKey.toString(), {points: 0});
+      const res = await axios.patch("/api/user/update/" + publicKey.toString(), {points: 0});
       setGameStatus('lost');
+
+      if(res.status == 200)
       setTimeout(()=>{window.location.reload();},1000)
 
       return;
@@ -141,8 +147,8 @@ const WordGuesserGame = () => {
       {!publicKey && <h2>Connect wallet to guess!</h2>}
       {publicKey && <>
         {show(user?.nextGuess) ? <>
-          <Card className="w-[20rem] max-w-md">
-
+          <Card className="w-[20rem] max-w-md relative">
+            <Image src={goblin} alt='goblin' className='absolute w-32 -top-20 -right-8' />
             <h2 className="text-center text-white mb-5">Word Guesser</h2>
 
 

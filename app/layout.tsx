@@ -5,7 +5,7 @@ import Providers from "@/providers/provider";
 import { Lilita_One } from "next/font/google";
 
 export const metadata: Metadata = {
-  title: "Grumble Games",
+  title: "Grumbles Games",
   description: "A collection of community engaging fun games.",
 };
 
