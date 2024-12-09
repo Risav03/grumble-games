@@ -19,16 +19,16 @@ export const GlobalContextProvider = ({ children }) => {
   const [loader, setLoader] = useState(false);
   const [publicKey, setPublicKey] = useState(null);
   const [user, setUser] = useState({});
-  const [leaderboard, setLeaderboard] = useState({});
+  // const [leaderboard, setLeaderboard] = useState({});
 
   const[fetch, setFetch] = useState(false);
 
   async function getUser(){
     try{
       const res = await axios.post("/api/user/create",{wallet: publicKey?.toString()});
-      const response = await axios.get('/api/getLeaderboard');
-      console.log(response.data.leaderboard);
-      setLeaderboard(response.data.leaderboard[0]);
+      // const response = await axios.get('/api/getLeaderboard');
+      // console.log(response.data.leaderboard);
+      // setLeaderboard(response.data.leaderboard[0]);
       setUser(res.data.user);
     }
     catch(err){
@@ -44,7 +44,7 @@ export const GlobalContextProvider = ({ children }) => {
   },[publicKey])
 
   return (
-    <GlobalContext.Provider value={{ loader, setLoader, publicKey, setPublicKey, user, setUser, fetch, setFetch, leaderboard}}>
+    <GlobalContext.Provider value={{ loader, setLoader, publicKey, setPublicKey, user, setUser, fetch, setFetch}}>
       {children}
     </GlobalContext.Provider>
   );

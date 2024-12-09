@@ -25,13 +25,13 @@ const WordGuesserGame = () => {
 
   const[day, setDay] = useState<number>(0);
 
-  const { publicKey, user, leaderboard } = useGlobalContext();
+  const { publicKey, user } = useGlobalContext();
 
-  useEffect(()=>{
-    const date = new Date();
-    console.log(date.getDate(), leaderboard.time)
-    setDay(date.getDate());
-  },[])
+  // useEffect(()=>{
+  //   const date = new Date();
+  //   console.log(date.getDate(), leaderboard.time)
+  //   setDay(date.getDate());
+  // },[])
 
   useEffect(() => {
     if (NFTs) {
@@ -80,14 +80,14 @@ const WordGuesserGame = () => {
     // @ts-ignore
     if (NFTs)
       initializeGame();
-  }, [NFTs]);
+  }, [NFTs, publicKey]);
 
 
   const handleGuess = async () => {
     if (guess.toLowerCase() === targetWord.toLowerCase()) {
-      setFeedback('Congratulations! You guessed the word!');
-      const res = await axios.patch("/api/user/update/" + publicKey.toString(), {points: Math.round((0.5*trials)*100*(0.25*targetWord.length))});
       setGameStatus('won');
+      setFeedback('Congratulations!');
+      const res = await axios.patch("/api/user/update/" + publicKey.toString(), {points: Math.round((0.5*trials)*100*(0.25*targetWord.length))});
 
       if(res.status == 200)
       setTimeout(()=>{window.location.reload();},1000)
@@ -115,6 +115,16 @@ const WordGuesserGame = () => {
   const useHint = () => {
     if (hints <= 0) return;
 
+    // Create a seed based on the target word
+    const seed = targetWord.split('').reduce((acc, char) => 
+        acc + char.charCodeAt(0), 0);
+
+    // Custom pseudo-random number generator using the seed
+    const pseudoRandom = (seed: number) => {
+        const x = Math.sin(seed) * 10000;
+        return x - Math.floor(x);
+    };
+
     const unrevealedIndexes = targetWord
       .split('')
       .map((_, index) => index)
@@ -122,10 +132,14 @@ const WordGuesserGame = () => {
 
     if (unrevealedIndexes.length === 0) return;
 
-    const randomIndex = unrevealedIndexes[Math.floor(Math.random() * unrevealedIndexes.length)];
+    // Use the seed to generate a consistent "random" index
+    const randomIndex = unrevealedIndexes[
+        Math.floor(pseudoRandom(seed) * unrevealedIndexes.length)
+    ];
+
     setRevealedLetters(prev => [...prev, randomIndex]);
     setHints(prev => prev - 1);
-  };
+};
 
   // Render the word with revealed/hidden letters
   const renderWordProgress = () => {
@@ -143,8 +157,8 @@ const WordGuesserGame = () => {
   }
 
   return (
-    <div className="">
-      {!publicKey && <h2>Connect wallet to guess!</h2>}
+    <div className="mx-auto">
+      {!publicKey && <h2 className='text-center'>Connect wallet to guess!</h2>}
       {publicKey && <>
         {show(user?.nextGuess) ? <>
           <Card className="w-[20rem] max-w-md relative">
@@ -195,8 +209,8 @@ const WordGuesserGame = () => {
         flex items-center p-3 rounded-lg
         ${gameStatus === 'won' ? 'bg-green-100' : 'bg-red-100'}
       `}>
-                    <AlertCircle className={` ${gameStatus === 'won' ? 'text-green-500' : 'text-red-500'}  mr-2 `} />
-                    <span className={` ${gameStatus === 'won' ? 'text-green-500' : 'text-red-500'} `}>{feedback}</span>
+                    <AlertCircle className={` ${gameStatus === 'won' && 'text-green-500'} ${gameStatus === 'lost' && 'text-red-500'}  mr-2 `} />
+                    <span className={` ${gameStatus === 'won' && 'text-green-500'} ${gameStatus === 'lost' && 'text-red-500'} `}>{feedback}</span>
                   </div>
                 )}
 
@@ -208,14 +222,14 @@ const WordGuesserGame = () => {
                 </div>
 
                 {/* Restart Game */}
-                {gameStatus !== 'playing' && (
+                {/* {gameStatus !== 'playing' && (
                   <Button
                     onClick={initializeGame}
                     type='text'
                   >
                     Start New Game
                   </Button>
-                )}
+                )} */}
               </div>
             </div>
           </Card>
@@ -225,9 +239,9 @@ const WordGuesserGame = () => {
         </>}
       </>}
 
-      {leaderboard.time == day && <div className='text-white flex items-center justify-center flex-col mt-5'>
+      {/* {leaderboard.time == day && <div className='text-white flex items-center justify-center flex-col mt-5'>
         Today's first guess by <span className='bg-gradient-to-b from-yellow-400 via-yellow-200 to-yellow-700 bg-clip-text text-transparent'>{leaderboard.walletId}</span>
-      </div>}
+      </div>} */}
 
     </div>
   );
